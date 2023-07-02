@@ -56,13 +56,11 @@ export default function ImagePicker() {
     try {
       const image = await launchCameraAsync({
         allowsEditing: true,
-        aspect: [16, 9],
+        aspect: [4, 4],
         quality: 0.5,
       });
       setImageUri(image.assets[0].uri);
-    } catch (e) {
-        
-    }
+    } catch (e) {}
   };
 
   let imagePreview = <Text>No image picked yet</Text>;
