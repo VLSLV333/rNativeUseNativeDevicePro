@@ -1,24 +1,24 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { StyleSheet, View, Alert, Image, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Alert, Image, Text, Dimensions } from "react-native";
 
 import {
   launchCameraAsync,
   useCameraPermissions,
   PermissionStatus,
-} from 'expo-image-picker';
+} from "expo-image-picker";
 
-import OutlineButton from '../UI/OutlineButton';
+import OutlineButton from "../UI/OutlineButton";
 
-import { Colors } from '../../constants/colors';
+import { Colors } from "../../constants/colors";
 
-const windowDimensions = Dimensions.get('window');
+const windowDimensions = Dimensions.get("window");
 
 const paddingHorizontalOfFOrm = 48;
 // making it equal to width
 const heightForPhoto = windowDimensions.width - paddingHorizontalOfFOrm;
 
-export default function ImagePicker() {
+export default function ImagePicker({ onImageChange }) {
   const [imageUri, setImageUri] = useState(null);
 
   const [cameraPermissionInformation, requestPermision] =
@@ -37,8 +37,8 @@ export default function ImagePicker() {
 
     if (cameraPermissionInformation.status === PermissionStatus.DENIED) {
       Alert.alert(
-        'Need camera access to add photo of your favorite place!',
-        'Go to your phone settings -> Privacy -> Camera -> Allow for this app:)'
+        "Need camera access to add photo of your favorite place!",
+        "Go to your phone settings -> Privacy -> Camera -> Allow for this app:)"
       );
       return false;
     }
@@ -60,6 +60,7 @@ export default function ImagePicker() {
         quality: 0.5,
       });
       setImageUri(image.assets[0].uri);
+      onImageChange(image.assets[0].uri)
     } catch (e) {}
   };
 
@@ -81,17 +82,17 @@ export default function ImagePicker() {
 
 const styles = StyleSheet.create({
   imagePreview: {
-    width: '100%',
+    width: "100%",
     height: heightForPhoto,
     marginVertical: 7,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: Colors.primary100,
     borderRadius: 7,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 7,
   },
 });

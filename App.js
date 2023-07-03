@@ -1,18 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from "react";
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AppLoading from "expo-app-loading";
 
-import AllPlaces from './screens/AllPlaces';
-import AddPlace from './screens/AddPlace';
+import { StatusBar } from "expo-status-bar";
 
-import IconButton from './components/UI/IconButton';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Colors } from './constants/colors';
+import AllPlaces from "./screens/AllPlaces";
+import AddPlace from "./screens/AddPlace";
+import Map from "./screens/Map";
+import PlaceDetails from "./screens/PlaceDetails";
+
+import IconButton from "./components/UI/IconButton";
+
+import { init } from "./util/database";
+
+import { Colors } from "./constants/colors";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const initializeDataBaze = async () => {
+      await init();
+    };
+
+    try {
+      initializeDataBaze();
+      setLoading(false);
+    } catch (e) {}
+  }, []);
+
+  if (loading) {
+    return <AppLoading />;
+  }
+
   return (
     <>
       <StatusBar style="dark" />
@@ -33,17 +58,19 @@ export default function App() {
                   name="add"
                   color={tintColor}
                   size={24}
-                  onPress={() => navigation.navigate('AddPlace')}
+                  onPress={() => navigation.navigate("AddPlace")}
                 />
               ),
-              title: 'Your Favorite Places',
+              title: "Your Favorite Places",
             })}
           />
           <Stack.Screen
             name="AddPlace"
             component={AddPlace}
-            options={{ title: 'Add a new Place' }}
+            options={{ title: "Add a new Place" }}
           />
+          <Stack.Screen component={Map} name="MapPicker" />
+          <Stack.Screen component={PlaceDetails} name="PlaceDetails" />
         </Stack.Navigator>
       </NavigationContainer>
     </>
