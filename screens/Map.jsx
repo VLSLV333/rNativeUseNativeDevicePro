@@ -25,10 +25,17 @@ export default function Map({ route, navigation }) {
         latitude: previoslyPickedLocation.lat,
         longitude: previoslyPickedLocation.lng,
       }));
+      setSelectedLocation({
+        lat: previoslyPickedLocation.lat,
+        lng: previoslyPickedLocation.lng,
+      });
     }
   }, [previoslyPickedLocation]);
 
   const selectLocationHandler = (event) => {
+    if (previoslyPickedLocation){
+      return
+    }
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
 
@@ -47,17 +54,19 @@ export default function Map({ route, navigation }) {
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: ({ tintColor }) => (
-        <IconButton
-          onPress={savePickedLocationHandler}
-          color={tintColor}
-          name="save"
-          size={24}
-        />
-      ),
-    });
-  }, [navigation, savePickedLocationHandler]);
+    if (!previoslyPickedLocation?.lat) {
+      navigation.setOptions({
+        headerRight: ({ tintColor }) => (
+          <IconButton
+            onPress={savePickedLocationHandler}
+            color={tintColor}
+            name="save"
+            size={24}
+          />
+        ),
+      });
+    }
+  }, [navigation, savePickedLocationHandler, previoslyPickedLocation]);
 
   return (
     <MapView
