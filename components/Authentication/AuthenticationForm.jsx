@@ -1,23 +1,25 @@
 import { useState } from 'react';
 
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 
 import AuthenticationInput from './AuthenticationInput';
 
 import MyButton from '../UI/MyButton';
 
-export default function AuthenticationForm({ isLogin, onAuthenticate }) {
-  let firstTouchEmail = true;
-  let firstTouchRepeatEmail = true;
-  let firstTouchPassword = true;
-  let firstTouchRepeatPassword = true;
 
+let firstTouchEmail = true;
+let firstTouchRepeatEmail = true;
+let firstTouchPassword = true;
+let firstTouchRepeatPassword = true;
+
+
+export default function AuthenticationForm({ isLogin, onAuthenticate }) {
   const [emailInput, setEmailInput] = useState('');
-  const [repeatEmailInput, setEepeatEmailInput] = useState('');
+  const [repeatEmailInput, setRepeatEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [repeatPasswordInput, setRepeatPasswordInput] = useState('');
 
-  let emailRegex = new RegExp('^.+@.{2,}.[a-z]+$', 'i');
+  let emailRegex = new RegExp('^.+@.+\.[a-z]{2,}$', 'i');
   let emailIsValid = emailRegex.test(emailInput.trim());
   let passwordIsValid = passwordInput.trim().length > 6;
   let repeatEmailIsValid = emailInput === repeatEmailInput;
@@ -32,9 +34,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
 
   const emailInputHandler = (e) => {
     setEmailInput(e);
-    console.log('here 2')
     if (!firstTouchEmail) {
-      console.log('here')
       emailIsValid = emailRegex.test(e.trim());
       setInputsValid((state) => ({
         ...state,
@@ -43,27 +43,38 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
     }
   };
 
+  const repeatEmailInputHandler = (e) => {
+    setRepeatEmailInput(e);
+    if (!firstTouchRepeatEmail) {
+      repeatEmailIsValid = emailInput === e && inputsValid.emailValid;
+      setInputsValid((state) => ({
+        ...state,
+        repearEmailValid: repeatEmailIsValid
+      }));
+    }
+  }
+
   const formButtonHandler = () => {
     if (isLogin) {
       repeatEmailIsValid = true;
       repeatPasswordIsValid = true;
     }
+    firstTouchRepeatEmail = false;
+    firstTouchRepeatPassword = false;
+    firstTouchEmail = false;
+    firstTouchPassword = false;
 
     if (!repeatEmailIsValid) {
-      firstTouchRepeatEmail = false;
       setInputsValid((state) => ({ ...state, repearEmailValid: false }));
     } else if (repeatEmailIsValid) {
       setInputsValid((state) => ({ ...state, repearEmailValid: true }));
     }
     if (!repeatPasswordIsValid) {
-      firstTouchRepeatPassword = false;
       setInputsValid((state) => ({ ...state, repeatPasswordValid: false }));
     } else if (repeatPasswordIsValid) {
       setInputsValid((state) => ({ ...state, repeatPasswordValid: true }));
     }
     if (!emailIsValid) {
-      console.log('here 3')
-      firstTouchEmail = false;
       setInputsValid((state) => ({
         ...state,
         emailValid: false,
@@ -73,7 +84,6 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
       setInputsValid((state) => ({ ...state, emailValid: true }));
     }
     if (!passwordIsValid) {
-      firstTouchPassword = false;
       setInputsValid((state) => ({
         ...state,
         passwordValid: false,
@@ -114,7 +124,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
             label="Repeat email"
             placeholder="repeat email"
             inpValue={repeatEmailInput}
-            onInputChange={setEepeatEmailInput}
+            onInputChange={repeatEmailInputHandler}
             isInvalid={!inputsValid.repearEmailValid}
           />
         )}

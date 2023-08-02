@@ -44,10 +44,11 @@ const styles = StyleSheet.create({
     color: Colors.error300,
   },
   input: {
-    borderColor: 'black',
+    borderColor: '#fff',
     borderWidth: 1,
     padding: 5,
-    color: '#fff'
+    color: '#fff',
+    borderRadius: 5
   },
   inputInvalid: {
     borderColor: Colors.error300,
