@@ -4,7 +4,7 @@ export default function LoadingOverlay({ txt }) {
   return (
     <View style={styles.rootContainer}>
       <Text style={styles.text}>{txt}</Text>
-      <ActivityIndicator size={'large'} color={'black'} />
+      <ActivityIndicator size={'large'} color={'white'} />
     </View>
   );
 }
@@ -12,8 +12,11 @@ export default function LoadingOverlay({ txt }) {
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   text: {
-    color: 'black',
+    color: '#fff',
+    marginBottom: 20
   },
 });

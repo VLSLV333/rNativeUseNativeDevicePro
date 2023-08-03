@@ -10,9 +10,10 @@ export default function AuthenticationInput({
   inpValue,
   placeholder,
   isInvalid,
+  contextMenuHidden
 }) {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} removeClippedSubviews={contextMenuHidden}>
       <Text style={[styles.text, isInvalid ? styles.textInvalid : {}]}>
         {label}
       </Text>
@@ -24,6 +25,7 @@ export default function AuthenticationInput({
         value={inpValue}
         placeholder={placeholder}
         placeholderTextColor='#c4c4c4'
+        contextMenuHidden={contextMenuHidden}
         style={[styles.input, isInvalid ? styles.inputInvalid : {}]}
       />
     </View>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
   input: {
     borderColor: '#fff',
     borderWidth: 1,
-    padding: 5,
+    padding: 8,
     color: '#fff',
     borderRadius: 5
   },

@@ -1,23 +1,24 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from "react-native";
 
-import AuthenticationInput from './AuthenticationInput';
+import AuthenticationInput from "./AuthenticationInput";
 
-import MyButton from '../UI/MyButton';
-
-let firstTouchEmail = true;
-let firstTouchRepeatEmail = true;
-let firstTouchPassword = true;
-let firstTouchRepeatPassword = true;
+import MyButton from "../UI/MyButton";
 
 export default function AuthenticationForm({ isLogin, onAuthenticate }) {
-  const [emailInput, setEmailInput] = useState('');
-  const [repeatEmailInput, setRepeatEmailInput] = useState('');
-  const [passwordInput, setPasswordInput] = useState('');
-  const [repeatPasswordInput, setRepeatPasswordInput] = useState('');
+  const [emailInput, setEmailInput] = useState("");
+  const [repeatEmailInput, setRepeatEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [repeatPasswordInput, setRepeatPasswordInput] = useState("");
 
-  let emailRegex = new RegExp('^.+@.+\.[a-z]{2,}$', 'i');
+  const [firstTouchEmail, setFirstTouchEmail] = useState(true);
+  const [firstTouchRepeatEmail, setFirstTouchRepeatEmail] = useState(true);
+  const [firstTouchPassword, setFirstTouchPassword] = useState(true);
+  const [firstTouchRepeatPassword, setFirstTouchRepeatPassword] =
+    useState(true);
+
+  let emailRegex = new RegExp("^.+@.+.[a-z]{2,}$", "i");
   let emailIsValid = emailRegex.test(emailInput.trim());
   let passwordIsValid = passwordInput.trim().length > 6;
   let repeatEmailIsValid = emailInput === repeatEmailInput;
@@ -62,32 +63,32 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
       setInputsValid((state) => ({
         ...state,
         passwordValid: passwordIsValid,
-        repeatPasswordValid: repeatPasswordIsValid
+        repeatPasswordValid: repeatPasswordIsValid,
       }));
     }
-    
   };
 
   const repeatPasswordInputHandler = (e) => {
-    setRepeatPasswordInput(e)
-    if (!firstTouchRepeatPassword){
-      repeatPasswordIsValid = passwordInput === e && inputsValid.passwordValid
-      setInputsValid(state => ({
+    setRepeatPasswordInput(e);
+    if (!firstTouchRepeatPassword) {
+      repeatPasswordIsValid = passwordInput === e && inputsValid.passwordValid;
+      setInputsValid((state) => ({
         ...state,
-        repeatPasswordValid: repeatPasswordIsValid
-      }))
+        repeatPasswordValid: repeatPasswordIsValid,
+      }));
     }
-  }
+  };
 
   const formButtonHandler = () => {
     if (isLogin) {
       repeatEmailIsValid = true;
       repeatPasswordIsValid = true;
     }
-    firstTouchRepeatEmail = false;
-    firstTouchRepeatPassword = false;
-    firstTouchEmail = false;
-    firstTouchPassword = false;
+
+    setFirstTouchEmail(false);
+    setFirstTouchRepeatEmail(false);
+    setFirstTouchPassword(false);
+    setFirstTouchRepeatPassword(false);
 
     if (!repeatEmailIsValid) {
       setInputsValid((state) => ({ ...state, repearEmailValid: false }));
@@ -124,11 +125,11 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
       repeatEmailIsValid &&
       repeatPasswordIsValid
     ) {
-      firstTouchEmail = true;
-      firstTouchRepeatEmail = true;
-      firstTouchPassword = true;
-      firstTouchRepeatPassword = true;
-      onAuthenticate();
+      setFirstTouchEmail(false);
+      setFirstTouchRepeatEmail(false);
+      setFirstTouchPassword(false);
+      setFirstTouchRepeatPassword(false);
+      onAuthenticate(emailInput,passwordInput);
     }
   };
 
@@ -151,6 +152,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
             inpValue={repeatEmailInput}
             onInputChange={repeatEmailInputHandler}
             isInvalid={!inputsValid.repearEmailValid}
+            contextMenuHidden={true}
           />
         )}
         <AuthenticationInput
@@ -159,7 +161,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
           secure
           inpValue={passwordInput}
           onInputChange={passwordInputHandler}
-          keyboardtype={'default'}
+          keyboardtype={"default"}
           isInvalid={!inputsValid.passwordValid}
         />
         {!isLogin && (
@@ -169,8 +171,9 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
             secure
             inpValue={repeatPasswordInput}
             onInputChange={repeatPasswordInputHandler}
-            keyboardtype={'default'}
+            keyboardtype={"default"}
             isInvalid={!inputsValid.repeatPasswordValid}
+            contextMenuHidden={true}
           />
         )}
       </View>
@@ -179,8 +182,14 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
           onPress={formButtonHandler}
           containerStyles={styles.btnPassedStyles}
         >
-          {isLogin ? 'Log in' : 'Sign up'}
+          {isLogin ? "Log in" : "Sign up"}
         </MyButton>
+        {/* {isLogin && !firstTouchEmail && <MyButton
+          onPress={formButtonHandler}
+          containerStyles={styles.changePassBtnStyle}
+        >
+         {"Forgot password"}
+        </MyButton>} */}
       </View>
     </View>
   );
@@ -193,9 +202,14 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     marginTop: 25,
-    alignItems: 'center',
+    alignItems: "center",
+    // flexDirection: 'row',
+    // justifyContent: 'center'
   },
   btnPassedStyles: {
-    width: 140,
+    width: 160,
   },
+  changePassBtnStyle: {
+    width: 160
+  }
 });
