@@ -1,17 +1,15 @@
 import { useState } from 'react';
 
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import AuthenticationInput from './AuthenticationInput';
 
 import MyButton from '../UI/MyButton';
 
-
 let firstTouchEmail = true;
 let firstTouchRepeatEmail = true;
 let firstTouchPassword = true;
 let firstTouchRepeatPassword = true;
-
 
 export default function AuthenticationForm({ isLogin, onAuthenticate }) {
   const [emailInput, setEmailInput] = useState('');
@@ -36,9 +34,11 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
     setEmailInput(e);
     if (!firstTouchEmail) {
       emailIsValid = emailRegex.test(e.trim());
+      repeatEmailIsValid = e === repeatEmailInput && emailIsValid;
       setInputsValid((state) => ({
         ...state,
-        emailValid: emailIsValid
+        emailValid: emailIsValid,
+        repearEmailValid: repeatEmailIsValid,
       }));
     }
   };
@@ -49,8 +49,33 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
       repeatEmailIsValid = emailInput === e && inputsValid.emailValid;
       setInputsValid((state) => ({
         ...state,
-        repearEmailValid: repeatEmailIsValid
+        repearEmailValid: repeatEmailIsValid,
       }));
+    }
+  };
+
+  const passwordInputHandler = (e) => {
+    setPasswordInput(e);
+    if (!firstTouchPassword) {
+      passwordIsValid = e.trim().length > 6;
+      repeatPasswordIsValid = e === repeatPasswordInput && passwordIsValid;
+      setInputsValid((state) => ({
+        ...state,
+        passwordValid: passwordIsValid,
+        repeatPasswordValid: repeatPasswordIsValid
+      }));
+    }
+    
+  };
+
+  const repeatPasswordInputHandler = (e) => {
+    setRepeatPasswordInput(e)
+    if (!firstTouchRepeatPassword){
+      repeatPasswordIsValid = passwordInput === e && inputsValid.passwordValid
+      setInputsValid(state => ({
+        ...state,
+        repeatPasswordValid: repeatPasswordIsValid
+      }))
     }
   }
 
@@ -133,7 +158,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
           placeholder="password"
           secure
           inpValue={passwordInput}
-          onInputChange={setPasswordInput}
+          onInputChange={passwordInputHandler}
           keyboardtype={'default'}
           isInvalid={!inputsValid.passwordValid}
         />
@@ -143,7 +168,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
             placeholder="repeat password"
             secure
             inpValue={repeatPasswordInput}
-            onInputChange={setRepeatPasswordInput}
+            onInputChange={repeatPasswordInputHandler}
             keyboardtype={'default'}
             isInvalid={!inputsValid.repeatPasswordValid}
           />
