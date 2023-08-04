@@ -10,10 +10,10 @@ export default function Map({ route, navigation }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const [initialRegion, setInitialRegion] = useState({
-    latitude: 37.78,
-    longitude: -122.43,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitude: 50.425,
+    longitude: 30.535,
+    latitudeDelta: 0.10,
+    longitudeDelta: 0.10,
   });
 
   const previoslyPickedLocation = route?.params;
@@ -46,7 +46,7 @@ export default function Map({ route, navigation }) {
     if (!selectedLocation) {
       Alert.alert(
         "No location picked",
-        "Please, tapp on map to pick location:)"
+        "Please, tap on map to pick location:)"
       );
       return;
     }

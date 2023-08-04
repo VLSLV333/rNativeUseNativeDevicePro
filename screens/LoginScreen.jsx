@@ -35,7 +35,6 @@ export default function LoginScreen() {
 
       dispatch(authenticate({ token, refreshToken }));
     } catch (e) {
-      console.log(e)
       if (e.response.data.error.message === 'EMAIL_NOT_FOUND') {
         dispatch(
           setErrorMessage(

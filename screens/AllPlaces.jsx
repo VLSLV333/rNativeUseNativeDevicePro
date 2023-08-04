@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from '@react-navigation/native';
 
-import PlacesList from "../components/Places/PlacesList";
+import PlacesList from '../components/Places/PlacesList';
 
-import { fetchPlaces } from "../util/database";
+import { fetchPlaces } from '../util/database';
+
+import getSecretMessage from '../util/testREquest';
+
+import MyButton from '../components/UI/MyButton';
 
 export default function AllPlaces() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  const token = useSelector(state => state.authSlice.token)
 
   const [placeArr, setPlaceArr] = useState([]);
 
@@ -62,5 +68,16 @@ export default function AllPlaces() {
     getExpireTime();
   }, []);
 
-  return <PlacesList placesArr={placeArr} />;
+  const btnHandler = () => {
+    getSecretMessage(token)
+  }
+
+  return (
+    <>
+      <MyButton onPress={btnHandler}>
+        request
+      </MyButton>
+      <PlacesList placesArr={placeArr} />
+    </>
+  );
 }
