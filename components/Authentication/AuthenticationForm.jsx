@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { View, StyleSheet } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
-import AuthenticationInput from "./AuthenticationInput";
+import { View, StyleSheet } from 'react-native';
 
-import MyButton from "../UI/MyButton";
+import AuthenticationInput from './AuthenticationInput';
+
+import MyButton from '../UI/MyButton';
+
+import { Colors } from '../../constants/colors';
 
 export default function AuthenticationForm({ isLogin, onAuthenticate }) {
-  const [emailInput, setEmailInput] = useState("");
-  const [repeatEmailInput, setRepeatEmailInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
-  const [repeatPasswordInput, setRepeatPasswordInput] = useState("");
+  const navigation = useNavigation();
+
+  const [emailInput, setEmailInput] = useState('');
+  const [repeatEmailInput, setRepeatEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [repeatPasswordInput, setRepeatPasswordInput] = useState('');
 
   const [firstTouchEmail, setFirstTouchEmail] = useState(true);
   const [firstTouchRepeatEmail, setFirstTouchRepeatEmail] = useState(true);
@@ -18,7 +24,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
   const [firstTouchRepeatPassword, setFirstTouchRepeatPassword] =
     useState(true);
 
-  let emailRegex = new RegExp("^.+@.+.[a-z]{2,}$", "i");
+  let emailRegex = new RegExp('^.+@.+.[a-z]{2,}$', 'i');
   let emailIsValid = emailRegex.test(emailInput.trim());
   let passwordIsValid = passwordInput.trim().length > 6;
   let repeatEmailIsValid = emailInput === repeatEmailInput;
@@ -129,7 +135,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
       setFirstTouchRepeatEmail(false);
       setFirstTouchPassword(false);
       setFirstTouchRepeatPassword(false);
-      onAuthenticate(emailInput,passwordInput);
+      onAuthenticate(emailInput, passwordInput);
     }
   };
 
@@ -161,7 +167,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
           secure
           inpValue={passwordInput}
           onInputChange={passwordInputHandler}
-          keyboardtype={"default"}
+          keyboardtype={'default'}
           isInvalid={!inputsValid.passwordValid}
         />
         {!isLogin && (
@@ -171,7 +177,7 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
             secure
             inpValue={repeatPasswordInput}
             onInputChange={repeatPasswordInputHandler}
-            keyboardtype={"default"}
+            keyboardtype={'default'}
             isInvalid={!inputsValid.repeatPasswordValid}
             contextMenuHidden={true}
           />
@@ -182,34 +188,37 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
           onPress={formButtonHandler}
           containerStyles={styles.btnPassedStyles}
         >
-          {isLogin ? "Log in" : "Sign up"}
+          {isLogin ? 'Log in' : 'Sign up'}
         </MyButton>
-        {/* {isLogin && !firstTouchEmail && <MyButton
-          onPress={formButtonHandler}
-          containerStyles={styles.changePassBtnStyle}
-        >
-         {"Forgot password"}
-        </MyButton>} */}
+        {isLogin && (
+          <MyButton
+            onPress={() => navigation.navigate('ChangePassScreen')}
+            containerStyles={styles.changePassBtnStyle}
+          >
+            {'Forgot password'}
+          </MyButton>
+        )}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  rootContainer: {},
-  inputsContainer: {
+  rootContainer: {
     paddingHorizontal: 20,
   },
+  inputsContainer: {},
   btnContainer: {
     marginTop: 25,
-    alignItems: "center",
-    // flexDirection: 'row',
-    // justifyContent: 'center'
+    alignItems: 'center',
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    paddingHorizontal:  4,
   },
   btnPassedStyles: {
-    width: 160,
+    width: '50%',
   },
   changePassBtnStyle: {
-    width: 160
-  }
+    width: '50%',
+  },
 });

@@ -34,6 +34,8 @@ export const renewTokenAsync = () => {
             AsyncStorage.setItem('expireTime', timeWhenTokenExpiresMiliseconds);
             dispatch(renewToken({ token, latestRefreshToken }));
           } catch (err) {
+            console.log(err)
+            console.log(err.response.data)
             dispatch(setErrorMessage('Long time no see! Please, log in again:)'));
             dispatch(logOut());
           }

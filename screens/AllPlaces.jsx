@@ -12,6 +12,8 @@ import { fetchPlaces } from "../util/database";
 
 import getSecretMessage from "../util/testREquest";
 
+import {renewTokenAsync} from '../store/asyncRenewToken'
+
 import MyButton from "../components/UI/MyButton";
 
 export default function AllPlaces() {
