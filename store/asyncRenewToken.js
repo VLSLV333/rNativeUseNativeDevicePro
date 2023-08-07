@@ -11,12 +11,15 @@ import { API_KEY } from "../util/authHandler";
 export const renewTokenAsync = () => {
     return async (dispatch, getState) => {
         const fetchData = async () => {
-            const refreshToken = getState((state) => state.authSlice.refreshToken);
+            // const refreshToken = getState((state) => state.authSlice.refreshToken);
+            const refreshToken = AsyncStorage.getItem('tokenForRefresh')
       
             const responseWithRefreshInfo = await axios.post(
               `https://securetoken.googleapis.com/v1/token?key=${API_KEY}`,
               `grant_type=refresh_token&refresh_token=${refreshToken}`
             );
+
+            console.log(refreshToken)
       
             const token = responseWithRefreshInfo.data.id_token;
             const latestRefreshToken = responseWithRefreshInfo.data.refresh_token;
