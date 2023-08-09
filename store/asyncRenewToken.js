@@ -12,7 +12,7 @@ export const renewTokenAsync = () => {
     return async (dispatch, getState) => {
         const fetchData = async () => {
             // const refreshToken = getState((state) => state.authSlice.refreshToken);
-            const refreshToken = AsyncStorage.getItem('tokenForRefresh')
+            const refreshToken = await AsyncStorage.getItem('tokenForRefresh')
 
             console.log(refreshToken)
       
