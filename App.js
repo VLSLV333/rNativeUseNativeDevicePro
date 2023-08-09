@@ -106,7 +106,9 @@ function IsAuthenticatedStack() {
         <Stack.Screen
           component={PlaceDetails}
           name="PlaceDetails"
-          options={{ title: 'Loading place...' }}
+          options={{
+            title: 'Loading place...',
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -127,8 +129,9 @@ function Root() {
 
     const lookForToken = async () => {
       const token = await AsyncStorage.getItem('token');
+      const refreshToken = await AsyncStorage.getItem('tokenForRefresh');
       if (token) {
-        dispatch(authenticate({ token }));
+        dispatch(authenticate({ token, refreshToken }));
       }
     };
 

@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import AuthenticationContent from "../components/Authentication/AuthenticationContent";
+import AuthenticationContent from '../components/Authentication/AuthenticationContent';
 
-import LoadingOverlay from "../components/UI/LoadingOverlay";
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
-import ErrorScreen from "./ErrorScreen";
+import ErrorScreen from './ErrorScreen';
 
-import { loginUser } from "../util/authHandler";
+import { loginUser } from '../util/authHandler';
 
-import { setErrorMessage } from "../store/errorSlice";
-import { authenticate } from "../store/authSlice";
+import { setErrorMessage } from '../store/errorSlice';
+import { authenticate } from '../store/authSlice';
 
 export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,9 @@ export default function LoginScreen() {
       )
         .getTime()
         .toString();
-      AsyncStorage.setItem("expireTime", timeWhenTokenExpiresMiliseconds);
+      AsyncStorage.setItem('expireTime', timeWhenTokenExpiresMiliseconds);
+
+      console.log(refreshToken);
 
       dispatch(authenticate({ token, refreshToken }));
     } catch (e) {
@@ -43,17 +45,21 @@ export default function LoginScreen() {
         );
       } else if (e.response.data.error.message === 'INVALID_PASSWORD') {
         dispatch(
-          setErrorMessage('You have provided wrong password. Please, try again or change it:)')
+          setErrorMessage(
+            'You have provided wrong password. Please, try again or change it:)'
+          )
         );
       } else {
-        dispatch(setErrorMessage('Something went wrong. Please, try again later:)'));
+        dispatch(
+          setErrorMessage('Something went wrong. Please, try again later:)')
+        );
       }
     }
     setLoading(false);
   };
 
   if (loading) {
-    return <LoadingOverlay txt={"You are beeing loged in..."} />;
+    return <LoadingOverlay txt={'You are beeing loged in...'} />;
   }
 
   if (errorMessage) {

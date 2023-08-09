@@ -5,6 +5,7 @@ import { Colors } from "../../constants/colors";
 export default function PlaceItem({ place, onPress }) {
   return (
     <Pressable
+    // place.id - айді конкретного плейсу, потрібно ним якось видалити плейс з бази
       onPress={() => onPress(place.id)}
       style={({ pressed }) => [
         styles.pressableContainer,

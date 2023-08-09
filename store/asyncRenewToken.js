@@ -13,6 +13,8 @@ export const renewTokenAsync = () => {
         const fetchData = async () => {
             // const refreshToken = getState((state) => state.authSlice.refreshToken);
             const refreshToken = AsyncStorage.getItem('tokenForRefresh')
+
+            console.log(refreshToken)
       
             const responseWithRefreshInfo = await axios.post(
               `https://securetoken.googleapis.com/v1/token?key=${API_KEY}`,

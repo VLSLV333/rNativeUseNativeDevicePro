@@ -1,18 +1,18 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
-import { ScrollView, View, Text, TextInput, StyleSheet } from "react-native";
+import { ScrollView, View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 
-import ImagePicker from "./ImagePicker";
-import LocationPicker from "./LocationPicker";
+import ImagePicker from './ImagePicker';
+import LocationPicker from './LocationPicker';
 
-import MyButton from "../UI/MyButton";
+import MyButton from '../UI/MyButton';
 
-import { Place } from "../../models/place";
+import { Place } from '../../models/place';
 
-import { Colors } from "../../constants/colors";
+import { Colors } from '../../constants/colors';
 
-export default function PlaceForm({ placeHandler }) {
-  const [enteredTitle, setEnteredTitle] = useState("");
+export default function PlaceForm({ placeHandler, notSavedYet }) {
+  const [enteredTitle, setEnteredTitle] = useState('');
   const [image, setImage] = useState(null);
   const [location, setLocation] = useState(null);
 
@@ -29,6 +29,10 @@ export default function PlaceForm({ placeHandler }) {
   }, []);
 
   const savePlaceHandler = () => {
+    if (enteredTitle.trim().length <= 0 || !image || !location) {
+      Alert.alert('Please, check entered place', 'To add new place you need to provide: title, image and location.')
+      return;
+    }
     const place = new Place(enteredTitle, image, location);
     placeHandler(place);
   };
@@ -51,7 +55,10 @@ export default function PlaceForm({ placeHandler }) {
       </View>
       <View>
         <ImagePicker onImageChange={imageChangeHandler} />
-        <LocationPicker onLocationChange={locationChangeHandler} />
+        <LocationPicker
+          onLocationChange={locationChangeHandler}
+          notSavedYet={notSavedYet}
+        />
         <MyButton onPress={savePlaceHandler}>Add Place</MyButton>
       </View>
     </ScrollView>
@@ -66,7 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 4,
     color: Colors.primary500,
   },

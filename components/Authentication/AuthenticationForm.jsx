@@ -1,3 +1,6 @@
+//ios client id: 693412946887-7touancvigfond2k6p640t1pqgqq9jpl.apps.googleusercontent.com
+// import ButtonWithLogo from '../UI/ButtonWithLogo';
+
 import { useState } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
@@ -7,8 +10,6 @@ import { View, StyleSheet } from 'react-native';
 import AuthenticationInput from './AuthenticationInput';
 
 import MyButton from '../UI/MyButton';
-
-import { Colors } from '../../constants/colors';
 
 export default function AuthenticationForm({ isLogin, onAuthenticate }) {
   const navigation = useNavigation();
@@ -199,6 +200,14 @@ export default function AuthenticationForm({ isLogin, onAuthenticate }) {
           </MyButton>
         )}
       </View>
+      {/* {isLogin && <View style={styles.logoBtnContainer}>
+        <ButtonWithLogo
+          logo={require('../../assets/googleLogo.webp')}
+          onPress={() => console.log('clicked')}
+          txt={'Log in using Google'}
+          btnContainer={styles.googleBtn}
+        />
+      </View>} */}
     </View>
   );
 }
@@ -213,12 +222,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row-reverse',
     justifyContent: 'center',
-    paddingHorizontal:  4,
+    paddingHorizontal: 4,
+  },
+  logoBtnContainer: {
+    alignItems: 'center',
   },
   btnPassedStyles: {
     width: '50%',
   },
   changePassBtnStyle: {
     width: '50%',
+  },
+  googleBtn: {
+    width: '60%',
+    marginTop: 15,
   },
 });

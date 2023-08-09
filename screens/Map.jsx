@@ -16,7 +16,12 @@ export default function Map({ route, navigation }) {
     longitudeDelta: 0.10,
   });
 
-  const previoslyPickedLocation = route?.params;
+  // console.log(route?.params.notSavedYet)
+  // console.log(route?.params.pickedLocation)
+  // console.log(route?.params)
+
+  const previoslyPickedLocation = route?.params.pickedLocation;
+  const notSavedYet = route?.params.notSavedYet;
 
   useEffect(() => {
     if (previoslyPickedLocation?.lat) {
@@ -33,7 +38,7 @@ export default function Map({ route, navigation }) {
   }, [previoslyPickedLocation]);
 
   const selectLocationHandler = (event) => {
-    if (previoslyPickedLocation){
+    if (previoslyPickedLocation && !notSavedYet){
       return
     }
     const lat = event.nativeEvent.coordinate.latitude;
@@ -50,11 +55,14 @@ export default function Map({ route, navigation }) {
       );
       return;
     }
-    navigation.navigate("AddPlace", { loc: selectedLocation });
+    // console.log(selectedLocation)
+    navigation.navigate("AddPlace", { loc: selectedLocation, changeMapBtn: true });
+    // navigation.navigate("AddPlace");
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
-    if (!previoslyPickedLocation?.lat) {
+    // if (!previoslyPickedLocation?.lat  && notSavedYet) {
+    if (notSavedYet) {
       navigation.setOptions({
         headerRight: ({ tintColor }) => (
           <IconButton

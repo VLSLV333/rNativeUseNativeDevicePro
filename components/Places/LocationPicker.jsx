@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import {
   StyleSheet,
@@ -10,29 +10,30 @@ import {
   Image,
   Text,
   ActivityIndicator,
-} from "react-native";
-import OutlineButton from "../UI/OutlineButton";
+} from 'react-native';
+import OutlineButton from '../UI/OutlineButton';
 
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
   PermissionStatus,
-} from "expo-location";
+} from 'expo-location';
 
-import { Colors } from "../../constants/colors";
-import { getMapPreview, getAddres } from "../../util/location";
+import { Colors } from '../../constants/colors';
+import { getMapPreview, getAddres } from '../../util/location';
 
-const windowDimensions = Dimensions.get("window");
+const windowDimensions = Dimensions.get('window');
 
 const paddingHorizontalOfFOrm = 48;
 // making it equal to width
 const heightForMap = windowDimensions.width - paddingHorizontalOfFOrm;
 
-export default function LocationPicker({ onLocationChange }) {
+export default function LocationPicker({ onLocationChange, notSavedYet }) {
   const navigation = useNavigation();
   const route = useRoute();
 
   const pickedLocationOnBigMap = route?.params?.loc || null;
+  const pickedAlready = route?.params?.changeMapBtn || null;
 
   const [loading, setLoading] = useState(false);
   const [pickedLocation, setPickedLocation] = useState(null);
@@ -48,12 +49,12 @@ export default function LocationPicker({ onLocationChange }) {
       if (pickedLocation) {
         const address = await getAddres(pickedLocation.lat, pickedLocation.lng);
 
-        if (address === "Alert") {
+        if (address === 'Alert') {
           Alert.alert(
-            "No address found",
-            "Please, select another marker on map"
+            'No address found',
+            'Please, select another marker on map'
           );
-          navigation.navigate("MapPicker");
+          navigation.navigate('MapPicker');
         }
 
         onLocationChange({ ...pickedLocation, address: address });
@@ -81,8 +82,8 @@ export default function LocationPicker({ onLocationChange }) {
 
     if (locationPersmisionInformation.status === PermissionStatus.DENIED) {
       Alert.alert(
-        "Need location access for adding to your favorite place!",
-        "Go to your phone settings -> Privacy -> Location Services -> Allow for this app:)"
+        'Need location access for adding to your favorite place!',
+        'Go to your phone settings -> Privacy -> Location Services -> Allow for this app:)'
       );
       return false;
     }
@@ -112,7 +113,7 @@ export default function LocationPicker({ onLocationChange }) {
     if (!hasPermission) {
       return;
     }
-    navigation.navigate("MapPicker", pickedLocation);
+    navigation.navigate('MapPicker', { pickedLocation, notSavedYet });
   }
 
   let locationPreview = <Text>No location picked yet</Text>;
@@ -138,7 +139,7 @@ export default function LocationPicker({ onLocationChange }) {
           Use my location
         </OutlineButton>
         <OutlineButton name="map" onPress={pickOnMapHanlder}>
-          Pick on map
+          {pickedAlready ? "Change location" : "Pick on map"}
         </OutlineButton>
       </View>
     </View>
@@ -147,22 +148,22 @@ export default function LocationPicker({ onLocationChange }) {
 
 const styles = StyleSheet.create({
   mapPreview: {
-    width: "100%",
+    width: '100%',
     height: heightForMap,
     marginVertical: 7,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: Colors.primary100,
     borderRadius: 7,
   },
   buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   image: {
-    height: "100%",
-    width: "100%",
+    height: '100%',
+    width: '100%',
     borderRadius: 7,
   },
 });

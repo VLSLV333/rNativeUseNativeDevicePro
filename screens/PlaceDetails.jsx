@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from 'react';
+
+import IconButton from '../components/UI/IconButton';
 
 import {
   ScrollView,
@@ -7,28 +9,37 @@ import {
   View,
   Text,
   ActivityIndicator,
-} from "react-native";
+  Alert,
+} from 'react-native';
 
-import OutlineButton from "../components/UI/OutlineButton";
+import OutlineButton from '../components/UI/OutlineButton';
 
-import { fetchPlaceDetails } from "../util/database";
+import { fetchPlaceDetails, deletePlace } from '../util/database';
 
-import { Colors } from "../constants/colors";
+import { Colors } from '../constants/colors';
 
 export default function PlaceDetails({ route, navigation }) {
   const [place, setPlace] = useState(null);
 
   const showOnMapHandler = () => {
     navigation.navigate(
-      "MapPicker",
+      'MapPicker',
       (previoslyPickedLocation = {
-        lat: place.location.lat,
-        lng: place.location.lng,
+        pickedLocation: { lat: place.location.lat, lng: place.location.lng },
       })
     );
   };
 
   const selectedPlaceId = route.params.placeId;
+
+  const deletePlaceHandler = async () => {
+    try {
+      await deletePlace(selectedPlaceId);
+    } catch (e) {
+      Alert.alert('Ooops:)', 'Please, try again later');
+    }
+    navigation.replace('AllPlaces');
+  };
 
   useEffect(() => {
     async function loadPlaceData() {
@@ -40,8 +51,21 @@ export default function PlaceDetails({ route, navigation }) {
     loadPlaceData();
   }, [selectedPlaceId]);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: ({ tintColor }) => (
+        <IconButton
+          color={tintColor}
+          size={24}
+          name={'trash'}
+          onPress={deletePlaceHandler}
+        />
+      ),
+    });
+  }, []);
+
   if (!place) {
-    return <ActivityIndicator size={"large"} style={styles.indicate} />;
+    return <ActivityIndicator size={'large'} style={styles.indicate} />;
   }
 
   return (
@@ -62,25 +86,25 @@ export default function PlaceDetails({ route, navigation }) {
 const styles = StyleSheet.create({
   indicate: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    height: "35%",
+    height: '35%',
     minHeight: 300,
-    width: "100%",
+    width: '100%',
   },
   locationContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addressContainer: {
     padding: 20,
   },
   address: {
     color: Colors.primary500,
-    textAlign: "center",
-    fontWeight: "bold",
+    textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 16,
   },
 });
